@@ -7,24 +7,38 @@ chrome.runtime.onMessage.addListener(
         if (request.greeting === "enable_selector"){
             console.log("selector enabled")
             document.addEventListener('click',selectionClickListener)
+            document.addEventListener('mouseover', addHoverEffect)
+            document.addEventListener('mouseout', removeHoverEffect)
+            
             isCaptureSelectorEnabled = true;
         }
     }
 )
-function selectionClickListener() {
-    document.addEventListener('click',(e) => {
-      if (isCaptureSelectorEnabled){
-        const selector = getCSSSelector(e.target)
-        document.querySelector(selector).style.border = '2px solid red'
-        chrome.runtime.sendMessage({greeting:'new_selector',selector:selector})
-        console.log("selector disabled")
-        isCaptureSelectorEnabled = false
-        document.removeEventListener('click',selectionClickListener)
-      }
-    })
+function selectionClickListener(e) {
+  if (isCaptureSelectorEnabled){
+    const selector = getCSSSelector(e.target)
+    document.querySelector(selector).style.border = '2px solid green'
+    chrome.runtime.sendMessage({greeting:'new_selector',selector:selector})
+    console.log("selector disabled")
+    isCaptureSelectorEnabled = false
+    document.removeEventListener('mouseover', addHoverEffect)
+    document.removeEventListener('mouseout', removeHoverEffect)
+    document.removeEventListener('click',selectionClickListener)
   }
+}
 
-  function getCSSSelector(el){
+
+function addHoverEffect  (event) {
+  event.target.classList.add('hovered')
+}
+
+
+function removeHoverEffect (event ){
+  event.target.classList.remove('hovered')
+}
+
+
+function getCSSSelector(el){
     let selector = el.tagName.toLowerCase();
     const attrs = el.attributes
     for (var i = 0; i < attrs.length; i++) {
