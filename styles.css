@@ -1,3 +1,21 @@
+:root{
+    --hover: red;
+    --regular-price: darkgreen;
+    --discounted-price: darkorange;
+    --regular-discounted-price: pink;
+}
+
 .hovered {
-    border: 2px solid red;
+    border: 2px solid var(--hover)
+}
+.regular_price{
+    border: 2px solid var(--regular-price)
+}
+.discounted_price{
+    border: 2px solid var(--discounted-price)
+}
+.discounted_price.regular_price {
+    border-width: 4px; /* Increase the border width to create a double border effect */
+    border-style: solid;
+    border-color: var(--regular-price) var(--discounted-price); /* Set border color for each side */
 }
