@@ -23,6 +23,7 @@
       "tabs",
       "activeTab",         
       "alarms",
+      "notifications",
       "storage"        
     ],
     "host_permissions": [

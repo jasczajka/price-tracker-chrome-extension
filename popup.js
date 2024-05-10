@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 
-document.addEventListener('DOMContentLoaded', ()=> {
+document.addEventListener('DOMContentLoaded', (e)=> {
   document.getElementById('indicateRegularPriceButton').addEventListener('click',  () => {
     chrome.tabs.query({active: true, lastFocusedWindow: true,},  (tabs) => {
       const tabId = tabs[0].id
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
   });
 });
 document.addEventListener('DOMContentLoaded', ()=> {
-  document.getElementById('indicateDiscountedPriceButton').addEventListener('click',  () => {
+  document.getElementById('indicateDiscountedPriceButton').addEventListener('click',  (e) => {
     chrome.tabs.query({active: true, lastFocusedWindow: true,},  (tabs) => {
       const tabId = tabs[0].id
       console.log(tabId)
@@ -25,21 +25,20 @@ document.addEventListener('DOMContentLoaded', ()=> {
   });
 });
 
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById("newProductButton").addEventListener('click', (e)=>{
+    chrome.tabs.query({active: true, lastFocusedWindow: true,},  (tabs) => {
+      const tabId = tabs[0].id
+      const linkToProduct = document.getElementById("product_link").value
+      console.log(linkToProduct)
+      chrome.tabs.sendMessage(tabId,{greeting:"new_product",link: linkToProduct})
+    })
+
+  });
+});
+
 
 async function fetchData(){
-  await chrome.runtime.sendMessage({greeting:'fetch_prices'})
+  chrome.runtime.sendMessage({greeting:'fetch_prices'})
 }
 
-function getCSSSelector(el){
-  let selector = el.tagName.toLowerCase();
-  const attrs = el.attributes
-  for (var i = 0; i < attrs.length; i++) {
-      let attr = attrs.item(i)
-      if (attr.name === 'id') selector += `#${attr.value}`;
-      if (attr.name === 'class') selector += attr.value.split(' ')
-      .filter(c => c !== 'regular_price' && c !== 'discounted_price')
-      .map((c) => `.${c}`).join('');
-      if (attr.name === 'name') selector += `[${attr.name}=${attr.value}]`;
-  }
-  return selector
-}

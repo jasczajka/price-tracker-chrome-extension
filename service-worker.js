@@ -12,8 +12,10 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       console.log(key,' ',val)
     }
   }
-  if(message.greeting === 'new_selector'){
-    console.log('received a selector')
-    console.log(message.selector)
+  if(message.greeting === 'new_product'){
+    console.log('received a product to track')
+    console.log('regular price selector: ' ,message.regular_price_selector)
+    console.log('discounted price selector: ' ,message.discounted_price_selector)
+    console.log('link: ', message.link)
   }
 })

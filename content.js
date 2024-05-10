@@ -24,16 +24,24 @@ chrome.runtime.onMessage.addListener(
             document.addEventListener('mouseout', removeHoverEffect)
             isDiscountedCaptureSelectorEnabled = true;
           }
+        }
+        if (request.greeting === "new_product"){
+          if(isDiscountedSelectorChosen && isRegularSelectorChosen){
+            console.log("valid new product request from popup in content")
+            const regularSelector = getCSSSelector(document.getElementsByClassName("regular_price")[0])
+            const discountedSelector = getCSSSelector(document.getElementsByClassName("discounted_price")[0])
+            const linkToProduct = request.link
+            chrome.runtime.sendMessage({greeting:"new_product", regular_price_selector : regularSelector, discounted_price_selector : discountedSelector, link: linkToProduct })
+          }
+          else{
+            console.log('alert should show')
+            alert("Please select both regular and discounted price, if it's the same element, choose it as both")
+          }
+        }
       }
-    }
 )
 function selectionClickListener(e) {
   if (isDiscountedCaptureSelectorEnabled || isRegularCaptureSelectorEnabled){
-    const selector = getCSSSelector(e.target)
-    
-
-    const greeting = isDiscountedCaptureSelectorEnabled? 'new_selector_regular':'new_selector_discounted'
-    chrome.runtime.sendMessage({greeting:greeting,selector:selector})
     
     if(isRegularCaptureSelectorEnabled){
       console.log("regular price chosen")
